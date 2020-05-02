@@ -1,0 +1,8 @@
+{
+    "command.cache.clear": {
+        "class": "\\Ulrack\\CliApplication\\Command\\CacheClearCommand",
+        "parameters": {
+            "cacheManager": "@{core.cache.manager}"
+        }
+    }
+}

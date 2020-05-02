@@ -1,0 +1,78 @@
+{
+    "cli.input-factory": {
+        "class": "\\Ulrack\\Command\\Factory\\InputFactory"
+    },
+    "cli.io-factory": {
+        "class": "\\Ulrack\\Cli\\Factory\\IoFactory"
+    },
+    "cli.default-theme": {
+        "class": "\\Ulrack\\Cli\\Component\\Theme\\DefaultTheme",
+        "parameters": {
+            "themeGenerator": "@{cli.theme-generator}"
+        }
+    },
+    "cli.theme-generator": {
+        "class": "\\Ulrack\\Cli\\Generator\\ThemeGenerator",
+        "parameters": {
+            "themeFactory": "@{cli.theme-factory}"
+        }
+    },
+    "cli.theme-factory": {
+        "class": "\\Ulrack\\Cli\\Factory\\ThemeFactory",
+        "parameters": {
+            "ioFactory": "@{cli.io-factory}"
+        }
+    },
+    "cli.element-factory": {
+        "class": "\\Ulrack\\Cli\\Factory\\ElementFactory",
+        "parameters": {
+            "theme": "@{cli.theme}",
+            "ioFactory": "@{cli.io-factory}"
+        }
+    },
+    "cli.error-element-factory": {
+        "class": "\\Ulrack\\Cli\\Factory\\ElementFactory",
+        "parameters": {
+            "theme": "@{cli.theme}",
+            "ioFactory": "@{cli.io-factory}",
+            "useStderr": true
+        }
+    },
+    "cli.form-factory": {
+        "class": "\\Ulrack\\Cli\\Factory\\FormFactory",
+        "parameters": {
+            "theme": "@{cli.theme}",
+            "ioFactory": "@{cli.io-factory}"
+        }
+    },
+    "cli.form-generator": {
+        "class": "\\Ulrack\\Cli\\Generator\\FormGenerator",
+        "parameters": {
+            "formFactory": "@{cli.form-factory}",
+            "elementFactory": "@{cli.element-factory}"
+        }
+    },
+    "cli.command-configuration": {
+        "class": "\\Ulrack\\Command\\Dao\\CommandConfiguration"
+    },
+    "cli.output": {
+        "class": "\\Ulrack\\Command\\Component\\Command\\Output",
+        "parameters": {
+            "formGenerator": "@{cli.form-generator}",
+            "ioFactory": "@{cli.io-factory}",
+            "theme": "@{cli.theme}",
+            "elementFactory": "@{cli.element-factory}"
+        }
+    },
+    "cli.command-router": {
+        "class": "\\Ulrack\\Command\\Component\\Router\\CommandRouter",
+        "parameters": {
+            "commandConfiguration": "@{cli.command-configuration}",
+            "serviceFactory": "@{cli.service-factory}",
+            "errorElementFactory": "@{cli.error-element-factory}",
+            "ioFactory": "@{cli.io-factory}",
+            "output": "@{cli.output}",
+            "formGenerator": "@{cli.form-generator}"
+        }
+    }
+}

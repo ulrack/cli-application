@@ -1,0 +1,4 @@
+{
+    "command": "validate",
+    "description": "Validation related commands."
+}

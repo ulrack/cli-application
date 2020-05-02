@@ -1,0 +1,6 @@
+{
+    "parent": "validate",
+    "command": "configuration",
+    "description": "Validates the configuration of the application.",
+    "service": "services.command.validate.configuration"
+}

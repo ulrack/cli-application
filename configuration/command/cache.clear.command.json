@@ -1,0 +1,6 @@
+{
+    "parent": "cache",
+    "command": "clear",
+    "description": "Clears the cache.",
+    "service": "services.command.cache.clear"
+}
