@@ -2,8 +2,8 @@
     "command.validate.configuration": {
         "class": "\\Ulrack\\CliApplication\\Command\\ValidateConfigurationCommand",
         "parameters": {
-            "configurationManager": "@{core.configuration.manager}",
-            "validationManager": "@{core.validation.manager}"
+            "configurationManager": "@{services.core.configuration.manager}",
+            "validationManager": "@{services.core.validation.manager}"
         }
     }
 }
