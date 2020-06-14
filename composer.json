@@ -12,9 +12,9 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.2",
-        "grizz-it/configuration": "^1.0",
+        "grizz-it/configuration": "^1.1",
         "ulrack/command": "^1.0",
-        "ulrack/kernel": "^1.0"
+        "ulrack/kernel": "^1.3"
     },
     "authors": [
         {

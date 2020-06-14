@@ -43,8 +43,31 @@ class CacheClearCommand implements CommandInterface
         InputInterface $input,
         OutputInterface $output
     ): void {
-        $output->writeLine('Clearing caches.');
-        $this->cacheManager->getCacheRegistry()->clearAllCaches();
+        $caches = $input->getParameter('cache');
+        if ($caches === null) {
+            $output->writeLine('Clearing caches.');
+            foreach (
+                $this->cacheManager
+                    ->getCacheFileSystem()
+                    ->list('') as $cacheDir
+            ) {
+                $this->cacheManager->getCache($cacheDir);
+            }
+
+            $this->cacheManager->getCacheRegistry()->clearAllCaches();
+        } elseif (is_string($caches) || is_array($caches)) {
+            $output->writeLine(
+                sprintf(
+                    'Clearing caches: %s',
+                    implode(', ', (array) $caches)
+                )
+            );
+
+            foreach ((array) $caches as $cache) {
+                $this->cacheManager->getCache($cache)->clear();
+            }
+        }
+
         $this->cacheManager->resetRegisteredCaches();
         $output->writeLine('Done.');
     }

@@ -2,5 +2,13 @@
     "parent": "cache",
     "command": "clear",
     "description": "Clears the cache.",
-    "service": "services.command.cache.clear"
+    "service": "services.command.cache.clear",
+    "parameters": [
+        {
+            "long": "cache",
+            "short": "c",
+            "description": "A list of caches to clear.",
+            "type": "array"
+        }
+    ]
 }
