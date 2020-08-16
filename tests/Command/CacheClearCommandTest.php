@@ -55,7 +55,7 @@ class CacheClearCommandTest extends TestCase
             ->withConsecutive(['foo'], ['bar'])
             ->willReturn($this->createMock(CacheInterface::class));
 
-        $output->expects(static::exactly(2))
+        $output->expects(static::exactly(6))
             ->method('writeLine');
 
         $cacheManager->expects(static::once())
@@ -98,7 +98,7 @@ class CacheClearCommandTest extends TestCase
         $cache->expects(static::once())
             ->method('clear');
 
-        $output->expects(static::exactly(2))
+        $output->expects(static::exactly(4))
             ->method('writeLine');
 
         $cacheManager->expects(static::once())
@@ -138,7 +138,7 @@ class CacheClearCommandTest extends TestCase
         $cacheTwo->expects(static::once())
             ->method('clear');
 
-        $output->expects(static::exactly(2))
+        $output->expects(static::exactly(5))
             ->method('writeLine');
 
         $cacheManager->expects(static::once())

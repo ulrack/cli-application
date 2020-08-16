@@ -51,9 +51,18 @@ class CacheClearCommand implements CommandInterface
                     ->getCacheFileSystem()
                     ->list('') as $cacheDir
             ) {
+                $output->writeLine(
+                    sprintf('Preparing cache directory: %s', $cacheDir),
+                    'text',
+                    true
+                );
                 $this->cacheManager->getCache($cacheDir);
             }
-
+            $output->writeLine(
+                'Clearing cache directories',
+                'text',
+                true
+            );
             $this->cacheManager->getCacheRegistry()->clearAllCaches();
         } elseif (is_string($caches) || is_array($caches)) {
             $output->writeLine(
@@ -64,9 +73,20 @@ class CacheClearCommand implements CommandInterface
             );
 
             foreach ((array) $caches as $cache) {
+                $output->writeLine(
+                    sprintf('Clearing cache directory: %s', $cache),
+                    'text',
+                    true
+                );
                 $this->cacheManager->getCache($cache)->clear();
             }
         }
+
+        $output->writeLine(
+            'Resetting registered caches.',
+            'text',
+            true
+        );
 
         $this->cacheManager->resetRegisteredCaches();
         $output->writeLine('Done.');

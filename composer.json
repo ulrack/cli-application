@@ -11,9 +11,11 @@
     "prefer-stable": true,
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
         "grizz-it/configuration": "^1.1",
-        "ulrack/command": "^1.0",
+        "phpunit/phpunit": "^9.3",
+        "squizlabs/php_codesniffer": "^3.5",
+        "ulrack/command": "^2.0",
         "ulrack/kernel": "^1.3"
     },
     "authors": [
@@ -52,7 +54,5 @@
         ]
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0",
-        "squizlabs/php_codesniffer": "^3.4"
     }
 }

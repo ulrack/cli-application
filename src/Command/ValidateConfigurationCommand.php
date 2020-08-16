@@ -61,9 +61,25 @@ class ValidateConfigurationCommand implements CommandInterface
         $validatorFactory = $this->validationManager->getValidatorFactory();
         $errorMessages = [];
 
-        foreach ($configRegistry as $configGroup) {
-            foreach ($configGroup as $entry) {
+        foreach ($configRegistry as $configGroupKey => $configGroup) {
+            $output->writeLine(
+                sprintf('Checking group: %s', $configGroupKey),
+                'text',
+                true
+            );
+
+            foreach ($configGroup as $entryKey => $entry) {
                 if (is_array($entry) && isset($entry['$schema'])) {
+                    $output->writeLine(
+                        sprintf(
+                            'Checking validation for %s with: %s',
+                            $entryKey,
+                            $entry['$schema']
+                        ),
+                        'text',
+                        true
+                    );
+
                     $validator = $validatorFactory->createFromRemoteFile(
                         $entry['$schema']
                     );
@@ -73,10 +89,18 @@ class ValidateConfigurationCommand implements CommandInterface
                             json_decode(json_encode($entry))
                         )
                     ) {
+                        $output->writeLine(
+                            sprintf('Validation failed for: %s', $entryKey),
+                            'text',
+                            true
+                        );
+
                         $errorMessages[] = sprintf(
                             'Invalid configuration found at: %s',
                             json_encode($entry, JSON_PRETTY_PRINT)
                         );
+
+                        continue;
                     }
                 }
             }
@@ -85,15 +109,18 @@ class ValidateConfigurationCommand implements CommandInterface
         $errorMessages = array_merge($errorMessages, $this->specialValidation(
             'parameters',
             'parameters.schema.json',
-            $configRegistry
+            $configRegistry,
+            $output
         ), $this->specialValidation(
             'services',
             'services.schema.json',
-            $configRegistry
+            $configRegistry,
+            $output
         ), $this->specialValidation(
             'preferences',
             'preferences.schema.json',
-            $configRegistry
+            $configRegistry,
+            $output
         ));
 
         if (count($errorMessages) > 0) {
@@ -115,14 +142,30 @@ class ValidateConfigurationCommand implements CommandInterface
     private function specialValidation(
         string $key,
         string $schema,
-        array $configRegistry
+        array $configRegistry,
+        OutputInterface $output
     ): array {
+        $output->writeLine(
+            sprintf(
+                'Running special validation for: %s with %s',
+                $key,
+                $schema
+            ),
+            'text',
+            true
+        );
         $errorMessages = [];
         $validator = $this->validationManager->getValidatorFactory()
             ->createFromRemoteFile($schema);
 
         if (isset($configRegistry[$key])) {
-            foreach ($configRegistry[$key] as $entry) {
+            foreach ($configRegistry[$key] as $entryKey => $entry) {
+                $output->writeLine(
+                    sprintf('Checking validation for: %s', $entryKey),
+                    'text',
+                    true
+                );
+
                 if (
                     !$validator->__invoke(
                         json_decode(json_encode($entry))
@@ -132,6 +175,14 @@ class ValidateConfigurationCommand implements CommandInterface
                         'Invalid configuration found at: %s',
                         json_encode($entry, JSON_PRETTY_PRINT)
                     );
+
+                    $output->writeLine(
+                        sprintf('Validation failed for: %s', $entryKey),
+                        'text',
+                        true
+                    );
+
+                    continue;
                 }
             }
         }
