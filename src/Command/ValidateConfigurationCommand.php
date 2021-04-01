@@ -7,9 +7,9 @@
 
 namespace Ulrack\CliApplication\Command;
 
-use Ulrack\Command\Common\Command\InputInterface;
-use Ulrack\Command\Common\Command\OutputInterface;
-use Ulrack\Command\Common\Command\CommandInterface;
+use GrizzIt\Command\Common\Command\InputInterface;
+use GrizzIt\Command\Common\Command\OutputInterface;
+use GrizzIt\Command\Common\Command\CommandInterface;
 use Ulrack\Kernel\Common\Manager\ValidationManagerInterface;
 use Ulrack\Kernel\Common\Manager\ConfigurationManagerInterface;
 use Ulrack\CliApplication\Exception\UnpassedValidationException;
@@ -21,14 +21,21 @@ class ValidateConfigurationCommand implements CommandInterface
      *
      * @var ConfigurationManagerInterface
      */
-    private $configurationManager;
+    private ConfigurationManagerInterface $configurationManager;
 
     /**
      * Contains the validation manager.
      *
      * @var ValidationManagerInterface
      */
-    private $validationManager;
+    private ValidationManagerInterface $validationManager;
+
+    /**
+     * Contains the additional validation configuration.
+     *
+     * @var array[]
+     */
+    private array $additionalValidation = [];
 
     /**
      * Constructor.
@@ -38,10 +45,12 @@ class ValidateConfigurationCommand implements CommandInterface
      */
     public function __construct(
         ConfigurationManagerInterface $configurationManager,
-        ValidationManagerInterface $validationManager
+        ValidationManagerInterface $validationManager,
+        array $additionalValidation
     ) {
         $this->configurationManager = $configurationManager;
         $this->validationManager = $validationManager;
+        $this->additionalValidation = $additionalValidation;
     }
 
     /**
@@ -106,22 +115,22 @@ class ValidateConfigurationCommand implements CommandInterface
             }
         }
 
-        $errorMessages = array_merge($errorMessages, $this->specialValidation(
-            'parameters',
-            'parameters.schema.json',
-            $configRegistry,
-            $output
-        ), $this->specialValidation(
-            'services',
-            'services.schema.json',
-            $configRegistry,
-            $output
-        ), $this->specialValidation(
-            'preferences',
-            'preferences.schema.json',
-            $configRegistry,
-            $output
-        ));
+        foreach ($this->additionalValidation as $validation) {
+            if (
+                is_array($validation) &&
+                isset($validation['key'], $validation['schema'])
+            ) {
+                $errorMessages = array_merge(
+                    $errorMessages,
+                    $this->specialValidation(
+                        $validation['key'],
+                        $validation['schema'],
+                        $configRegistry,
+                        $output
+                    )
+                );
+            }
+        }
 
         if (count($errorMessages) > 0) {
             throw new UnpassedValidationException(...$errorMessages);
@@ -158,8 +167,8 @@ class ValidateConfigurationCommand implements CommandInterface
         $validator = $this->validationManager->getValidatorFactory()
             ->createFromRemoteFile($schema);
 
-        if (isset($configRegistry[$key])) {
-            foreach ($configRegistry[$key] as $entryKey => $entry) {
+        if (isset($configRegistry['services'][$key])) {
+            foreach ($configRegistry['services'][$key] as $entryKey => $entry) {
                 $output->writeLine(
                     sprintf('Checking validation for: %s', $entryKey),
                     'text',

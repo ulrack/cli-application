@@ -11,8 +11,8 @@ use PHPUnit\Framework\TestCase;
 use GrizzIt\Cache\Common\CacheInterface;
 use GrizzIt\Vfs\Common\FileSystemInterface;
 use GrizzIt\Cache\Common\CacheRegistryInterface;
-use Ulrack\Command\Common\Command\InputInterface;
-use Ulrack\Command\Common\Command\OutputInterface;
+use GrizzIt\Command\Common\Command\InputInterface;
+use GrizzIt\Command\Common\Command\OutputInterface;
 use Ulrack\CliApplication\Command\CacheClearCommand;
 use Ulrack\Kernel\Common\Manager\CacheManagerInterface;
 

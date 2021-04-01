@@ -7,12 +7,12 @@
 
 namespace Ulrack\CliApplication\Component\Application;
 
-use Ulrack\Command\Dao\CommandConfiguration;
 use Ulrack\Kernel\Common\ApplicationInterface;
 use GrizzIt\Configuration\Common\RegistryInterface;
+use Ulrack\CliApplication\Dao\CommandConfiguration;
 use Ulrack\Kernel\Common\Manager\ServiceManagerInterface;
-use Ulrack\Command\Common\Dao\CommandConfigurationInterface;
 use Ulrack\Kernel\Common\Manager\ConfigurationManagerInterface;
+use Ulrack\CliApplication\Common\Dao\CommandConfigurationInterface;
 
 class CliApplication implements ApplicationInterface
 {
@@ -58,17 +58,12 @@ class CliApplication implements ApplicationInterface
     {
         $serviceFactory = $serviceManager->getServiceFactory();
         $themeKey = $serviceFactory->create('parameters.cli-theme');
-        if ($themeKey === '${CLI_THEME}') {
-            $themeKey = 'services.cli.default-theme';
-        }
-
         $theme = $serviceFactory->create($themeKey)->getTheme();
         $serviceManager->registerService('cli.theme', $theme);
-        $serviceManager->registerService('cli.service-factory', $serviceFactory);
 
         $this->loadCommands(
             $serviceFactory->create('services.cli.command-configuration'),
-            $serviceFactory->create('services.core.configuration.manager')
+            $serviceFactory->create('internal.core.configuration.manager')
                 ->getConfigRegistry()
         );
 

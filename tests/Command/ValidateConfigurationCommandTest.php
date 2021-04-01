@@ -9,11 +9,11 @@ namespace Ulrack\CliApplication\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
 use GrizzIt\Validator\Common\ValidatorInterface;
-use Ulrack\Command\Common\Command\InputInterface;
-use Ulrack\Command\Common\Command\OutputInterface;
+use GrizzIt\Command\Common\Command\InputInterface;
+use GrizzIt\Command\Common\Command\OutputInterface;
 use GrizzIt\Configuration\Common\RegistryInterface;
 use Ulrack\Kernel\Common\Manager\ValidationManagerInterface;
-use Ulrack\JsonSchema\Common\SchemaValidatorFactoryInterface;
+use GrizzIt\JsonSchema\Common\SchemaValidatorFactoryInterface;
 use Ulrack\CliApplication\Command\ValidateConfigurationCommand;
 use Ulrack\Kernel\Common\Manager\ConfigurationManagerInterface;
 use Ulrack\CliApplication\Exception\UnpassedValidationException;
@@ -35,10 +35,19 @@ class ValidateConfigurationCommandTest extends TestCase
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
-        $configurationManager = $this->createMock(ConfigurationManagerInterface::class);
-        $validationManager = $this->createMock(ValidationManagerInterface::class);
+        $configurationManager = $this->createMock(
+            ConfigurationManagerInterface::class
+        );
+
+        $validationManager = $this->createMock(
+            ValidationManagerInterface::class
+        );
+
         $configRegistry = $this->createMock(RegistryInterface::class);
-        $validatorFactory = $this->createMock(SchemaValidatorFactoryInterface::class);
+        $validatorFactory = $this->createMock(
+            SchemaValidatorFactoryInterface::class
+        );
+
         $validator = $this->createMock(ValidatorInterface::class);
 
         $configurationManager->expects(static::once())
@@ -48,30 +57,40 @@ class ValidateConfigurationCommandTest extends TestCase
         $configRegistry->expects(static::once())
             ->method('toArray')
             ->willReturn([
-                'foo' => [
-                    [
-                        '$schema' => 'foo.json',
-                        'bar' => 'baz'
+                'services' => [
+                    'foo' => [
+                        [
+                            '$schema' => 'foo.json',
+                            'bar' => 'baz'
+                        ]
                     ]
                 ]
             ]);
 
         $subject = new ValidateConfigurationCommand(
             $configurationManager,
-            $validationManager
+            $validationManager,
+            [
+                [
+                    'key' => 'foo',
+                    'schema' => 'foo.json'
+                ],
+                [
+                    'key' => 'services',
+                    'schema' => 'services.schema.json'
+                ]
+            ]
         );
 
-        $validationManager->expects(static::exactly(4))
+        $validationManager->expects(static::exactly(3))
             ->method('getValidatorFactory')
             ->willReturn($validatorFactory);
 
-        $validatorFactory->expects(static::exactly(4))
+        $validatorFactory->expects(static::exactly(2))
             ->method('createFromRemoteFile')
             ->withConsecutive(
                 ['foo.json'],
-                ['parameters.schema.json'],
-                ['services.schema.json'],
-                ['preferences.schema.json']
+                ['services.schema.json']
             )->willReturn($validator);
 
         $validator->expects(static::once())
@@ -95,9 +114,20 @@ class ValidateConfigurationCommandTest extends TestCase
     {
         $input = $this->createMock(InputInterface::class);
         $output = $this->createMock(OutputInterface::class);
-        $configurationManager = $this->createMock(ConfigurationManagerInterface::class);
-        $validationManager = $this->createMock(ValidationManagerInterface::class);
+        $configurationManager = $this->createMock(
+            ConfigurationManagerInterface::class
+        );
+
+        $validationManager = $this->createMock(
+            ValidationManagerInterface::class
+        );
+
+        $validatorFactory = $this->createMock(
+            SchemaValidatorFactoryInterface::class
+        );
+
         $configRegistry = $this->createMock(RegistryInterface::class);
+        $validator = $this->createMock(ValidatorInterface::class);
 
         $configurationManager->expects(static::once())
             ->method('getConfigRegistry')
@@ -106,8 +136,10 @@ class ValidateConfigurationCommandTest extends TestCase
         $configRegistry->expects(static::once())
             ->method('toArray')
             ->willReturn([
-                'parameters' => [
-                    ['foo' => 'bar']
+                'services' => [
+                    'parameters' => [
+                        ['foo' => 'bar']
+                    ]
                 ],
                 'foo' => [
                     [
@@ -117,9 +149,30 @@ class ValidateConfigurationCommandTest extends TestCase
                 ]
             ]);
 
+        $validationManager->expects(static::exactly(2))
+            ->method('getValidatorFactory')
+            ->willReturn($validatorFactory);
+
+        $validatorFactory->expects(static::exactly(2))
+            ->method('createFromRemoteFile')
+            ->withConsecutive(
+                ['foo.json'],
+                ['parameters.schema.json']
+            )->willReturn($validator);
+
+        $validator->expects(static::exactly(2))
+            ->method('__invoke')
+            ->willReturn(false);
+
         $subject = new ValidateConfigurationCommand(
             $configurationManager,
-            $validationManager
+            $validationManager,
+            [
+                [
+                    'key' => 'parameters',
+                    'schema' => 'parameters.schema.json'
+                ]
+            ]
         );
 
         $this->expectException(UnpassedValidationException::class);

@@ -1,78 +1,134 @@
 {
-    "cli.input-factory": {
-        "class": "\\Ulrack\\Command\\Factory\\InputFactory"
-    },
-    "cli.io-factory": {
-        "class": "\\Ulrack\\Cli\\Factory\\IoFactory"
-    },
-    "cli.default-theme": {
-        "class": "\\Ulrack\\Cli\\Component\\Theme\\DefaultTheme",
-        "parameters": {
-            "themeGenerator": "@{services.cli.theme-generator}"
+    "parameters": {
+        "cli-theme": "services.cli.default-theme",
+        "service.configuration.validation.services": {
+            "key": "services",
+            "schema": "services.schema.json"
+        },
+        "service.configuration.validation.invocations": {
+            "key": "invocations",
+            "schema": "invocations.schema.json"
+        },
+        "service.configuration.validation.tags": {
+            "key": "tags",
+            "schema": "tags.schema.json"
+        },
+        "service.configuration.validation.triggers": {
+            "key": "triggers",
+            "schema": "triggers.schema.json"
         }
     },
-    "cli.theme-generator": {
-        "class": "\\Ulrack\\Cli\\Generator\\ThemeGenerator",
-        "parameters": {
-            "themeFactory": "@{services.cli.theme-factory}"
+    "triggers": {
+        "service.configuration.validation": {}
+    },
+    "tags": {
+        "add.service.validation.services": {
+            "service": "parameters.service.configuration.validation.services",
+            "trigger": "triggers.service.configuration.validation"
+        },
+        "add.service.validation.invocations": {
+            "service": "parameters.service.configuration.validation.invocations",
+            "trigger": "triggers.service.configuration.validation"
+        },
+        "add.service.validation.tags": {
+            "service": "parameters.service.configuration.validation.tags",
+            "trigger": "triggers.service.configuration.validation"
+        },
+        "add.service.validation.triggers": {
+            "service": "parameters.service.configuration.validation.triggers",
+            "trigger": "triggers.service.configuration.validation"
         }
     },
-    "cli.theme-factory": {
-        "class": "\\Ulrack\\Cli\\Factory\\ThemeFactory",
-        "parameters": {
-            "ioFactory": "@{services.cli.io-factory}"
-        }
-    },
-    "cli.element-factory": {
-        "class": "\\Ulrack\\Cli\\Factory\\ElementFactory",
-        "parameters": {
-            "theme": "@{services.cli.theme}",
-            "ioFactory": "@{services.cli.io-factory}"
-        }
-    },
-    "cli.error-element-factory": {
-        "class": "\\Ulrack\\Cli\\Factory\\ElementFactory",
-        "parameters": {
-            "theme": "@{services.cli.theme}",
-            "ioFactory": "@{services.cli.io-factory}",
-            "useStderr": true
-        }
-    },
-    "cli.form-factory": {
-        "class": "\\Ulrack\\Cli\\Factory\\FormFactory",
-        "parameters": {
-            "theme": "@{services.cli.theme}",
-            "ioFactory": "@{services.cli.io-factory}"
-        }
-    },
-    "cli.form-generator": {
-        "class": "\\Ulrack\\Cli\\Generator\\FormGenerator",
-        "parameters": {
-            "formFactory": "@{services.cli.form-factory}",
-            "elementFactory": "@{services.cli.element-factory}"
-        }
-    },
-    "cli.command-configuration": {
-        "class": "\\Ulrack\\Command\\Dao\\CommandConfiguration"
-    },
-    "cli.output": {
-        "class": "\\Ulrack\\Command\\Component\\Command\\Output",
-        "parameters": {
-            "formGenerator": "@{services.cli.form-generator}",
-            "ioFactory": "@{services.cli.io-factory}",
-            "theme": "@{services.cli.theme}",
-            "elementFactory": "@{services.cli.element-factory}"
-        }
-    },
-    "cli.command-router": {
-        "class": "\\Ulrack\\Command\\Component\\Router\\CommandRouter",
-        "parameters": {
-            "commandConfiguration": "@{services.cli.command-configuration}",
-            "serviceFactory": "@{services.cli.service-factory}",
-            "errorElementFactory": "@{services.cli.error-element-factory}",
-            "ioFactory": "@{services.cli.io-factory}",
-            "output": "@{services.cli.output}",
-            "formGenerator": "@{services.cli.form-generator}"
+    "services": {
+        "cli.input-factory": {
+            "class": "\\GrizzIt\\Command\\Factory\\InputFactory"
+        },
+        "cli.io-factory": {
+            "class": "\\GrizzIt\\Cli\\Factory\\IoFactory"
+        },
+        "cli.default-theme": {
+            "class": "\\GrizzIt\\Cli\\Component\\Theme\\DefaultTheme",
+            "parameters": {
+                "themeGenerator": "@{services.cli.theme-generator}"
+            }
+        },
+        "cli.theme-generator": {
+            "class": "\\GrizzIt\\Cli\\Generator\\ThemeGenerator",
+            "parameters": {
+                "themeFactory": "@{services.cli.theme-factory}"
+            }
+        },
+        "cli.theme-factory": {
+            "class": "\\GrizzIt\\Cli\\Factory\\ThemeFactory",
+            "parameters": {
+                "ioFactory": "@{services.cli.io-factory}"
+            }
+        },
+        "cli.element-factory": {
+            "class": "\\GrizzIt\\Cli\\Factory\\ElementFactory",
+            "parameters": {
+                "theme": "@{internal.cli.theme}",
+                "ioFactory": "@{services.cli.io-factory}"
+            }
+        },
+        "cli.error-element-factory": {
+            "class": "\\GrizzIt\\Cli\\Factory\\ElementFactory",
+            "parameters": {
+                "theme": "@{internal.cli.theme}",
+                "ioFactory": "@{services.cli.io-factory}",
+                "useStderr": true
+            }
+        },
+        "cli.form-factory": {
+            "class": "\\GrizzIt\\Cli\\Factory\\FormFactory",
+            "parameters": {
+                "theme": "@{internal.cli.theme}",
+                "ioFactory": "@{services.cli.io-factory}"
+            }
+        },
+        "cli.form-generator": {
+            "class": "\\GrizzIt\\Cli\\Generator\\FormGenerator",
+            "parameters": {
+                "formFactory": "@{services.cli.form-factory}",
+                "elementFactory": "@{services.cli.element-factory}"
+            }
+        },
+        "cli.command-configuration": {
+            "class": "\\Ulrack\\CliApplication\\Dao\\CommandConfiguration"
+        },
+        "cli.output": {
+            "class": "\\GrizzIt\\Command\\Component\\Command\\Output",
+            "parameters": {
+                "formGenerator": "@{services.cli.form-generator}",
+                "ioFactory": "@{services.cli.io-factory}",
+                "theme": "@{internal.cli.theme}",
+                "elementFactory": "@{services.cli.element-factory}"
+            }
+        },
+        "cli.command-router": {
+            "class": "\\Ulrack\\CliApplication\\Component\\Router\\CommandRouter",
+            "parameters": {
+                "commandConfiguration": "@{services.cli.command-configuration}",
+                "serviceFactory": "@{internal.core.service.factory}",
+                "errorElementFactory": "@{services.cli.error-element-factory}",
+                "ioFactory": "@{services.cli.io-factory}",
+                "output": "@{services.cli.output}",
+                "formGenerator": "@{services.cli.form-generator}"
+            }
+        },
+        "command.cache.clear": {
+            "class": "\\Ulrack\\CliApplication\\Command\\CacheClearCommand",
+            "parameters": {
+                "cacheManager": "@{internal.core.cache.manager}"
+            }
+        },
+        "command.validate.configuration": {
+            "class": "\\Ulrack\\CliApplication\\Command\\ValidateConfigurationCommand",
+            "parameters": {
+                "configurationManager": "@{internal.core.configuration.manager}",
+                "validationManager": "@{internal.core.validation.manager}",
+                "additionalValidation": "@{triggers.service.configuration.validation}"
+            }
         }
     }
 }

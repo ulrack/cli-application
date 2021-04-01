@@ -8,15 +8,15 @@
 namespace Ulrack\CliApplication\Tests\Component\Application;
 
 use PHPUnit\Framework\TestCase;
-use Ulrack\Command\Factory\InputFactory;
-use Ulrack\Command\Common\Router\RouterInterface;
+use GrizzIt\Command\Factory\InputFactory;
 use GrizzIt\Configuration\Common\RegistryInterface;
-use Ulrack\Services\Common\ServiceFactoryInterface;
-use Ulrack\Cli\Common\Theme\ApplicationThemeInterface;
+use GrizzIt\Cli\Common\Theme\ApplicationThemeInterface;
+use Ulrack\CliApplication\Common\Router\RouterInterface;
 use Ulrack\Kernel\Common\Manager\ServiceManagerInterface;
-use Ulrack\Command\Common\Dao\CommandConfigurationInterface;
+use GrizzIt\Services\Common\Factory\ServiceFactoryInterface;
 use Ulrack\CliApplication\Component\Application\CliApplication;
 use Ulrack\Kernel\Common\Manager\ConfigurationManagerInterface;
+use Ulrack\CliApplication\Common\Dao\CommandConfigurationInterface;
 
 /**
  * @coversDefaultClass \Ulrack\CliApplication\Component\Application\CliApplication
@@ -50,11 +50,11 @@ class CliApplicationTest extends TestCase
                 ['parameters.cli-theme'],
                 ['services.cli.default-theme'],
                 ['services.cli.command-configuration'],
-                ['services.core.configuration.manager'],
+                ['internal.core.configuration.manager'],
                 ['services.cli.command-router'],
                 ['services.cli.input-factory']
             )->willReturnOnConsecutiveCalls(
-                '${CLI_THEME}',
+                'services.cli.default-theme',
                 $this->createMock(ApplicationThemeInterface::class),
                 $this->createMock(CommandConfigurationInterface::class),
                 $configurationManager,

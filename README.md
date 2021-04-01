@@ -4,7 +4,7 @@
 
 This package contains an application for the
 [Ulrack Kernel](https://github.com/ulrack/kernel) which implements the
-[Ulrack Command](https://github.com/ulrack/command) package.
+[Grizz-IT Command](https://github.com/grizz-it/command) package.
 
 ## Installation
 
