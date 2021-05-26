@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.0.1 - 2021-05-26
+### Fixed
+- Fixed issue where shorthand notations of parameters weren't working.
+
 ## 2.0.0 - 2021-04-01
 ### Added
 - Support for `grizz-it/command` and `grizz-it/cli`.
@@ -35,7 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The initial implementation of the package.
 
 # Versions
-- [2.0.0 > Unreleased](https://github.com/ulrack/cli-application/compare/2.0.0...HEAD)
+- [2.0.1 > Unreleased](https://github.com/ulrack/cli-application/compare/2.0.1...HEAD)
+- [2.0.0 > 2.0.1](https://github.com/ulrack/cli-application/compare/2.0.0...2.0.1)
 - [1.2.1 > 2.0.0](https://github.com/ulrack/cli-application/compare/1.2.1...2.0.0)
 - [1.2.0 > 1.2.1](https://github.com/ulrack/cli-application/compare/1.2.0...1.2.1)
 - [1.1.0 > 1.2.0](https://github.com/ulrack/cli-application/compare/1.1.0...1.2.0)

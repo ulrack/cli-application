@@ -8,6 +8,7 @@
 namespace Ulrack\CliApplication\Component\Application;
 
 use Ulrack\Kernel\Common\ApplicationInterface;
+use Ulrack\CliApplication\Component\Command\Input;
 use GrizzIt\Configuration\Common\RegistryInterface;
 use Ulrack\CliApplication\Dao\CommandConfiguration;
 use Ulrack\Kernel\Common\Manager\ServiceManagerInterface;
@@ -71,7 +72,7 @@ class CliApplication implements ApplicationInterface
         $inputFactory = $serviceFactory->create('services.cli.input-factory');
 
         $this->exitCode = $commandRouter->__invoke(
-            $inputFactory->create($this->arguments)
+            new Input($inputFactory->create($this->arguments))
         );
     }
 
